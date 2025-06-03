@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Health Insurance - Myth vs. Reality</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .ad-container {
+            width: 300px;
+            height: 520px;
+            overflow: hidden;
+            background-image: url('https://www.reliancegeneral.co.in/siteAssets/rgiclassets/images/blogs-images/difference-between-life-Insurance-and-health-insurance2.webp');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            border: 2px solid #1e40af;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        .card-container {
+            perspective: 1000px;
+            height: 300px;
+            margin: 0 12px;
+        }
+        .card {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+            height: 100%;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 12px;
+        }
+        .card-front {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            background-color: rgba(30, 64, 175, 0.95);
+            color: white;
+        }
+        .logo {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .myth-text {
+            font-weight: bold;
+            font-size: 1.125rem; /* Larger text size (18px) */
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+            max-height: 180px;
+            scrollbar-width: thin;
+            scrollbar-color: #1e40af #e5e7eb;
+        }
+        .reality-text {
+            overflow-y: auto;
+            max-height: 220px;
+            scrollbar-width: thin;
+            scrollbar-color: #1e40af #e5e7eb;
+        }
+        .myth-text::-webkit-scrollbar, .reality-text::-webkit-scrollbar {
+            width: 6px;
+        }
+        .myth-text::-webkit-scrollbar-thumb, .reality-text::-webkit-scrollbar-thumb {
+            background-color: #1e40af;
+            border-radius: 4px;
+        }
+        .final-image-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .final-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="bg-blue-50 flex items-center justify-center min-h-screen">
+    <div class="ad-container flex flex-col items-center justify-between p-5">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Star_Health_and_Allied_Insurance.svg/2560px-Star_Health_and_Allied_Insurance.svg.png" alt="Star Health Insurance Logo" class="logo">
+        <div id="card-container" class="card-container w-full">
+            <div id="card" class="card w-full">
+                <div class="card-front text-center">
+                    <h2 class="text-base font-semibold text-blue-900">Myth</h2>
+                    <p id="myth-text" class="myth-text text-gray-700"></p>
+                    <button id="flip-button" onclick="flipCard()" class="mt-3 bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700">Reveal Reality</button>
+                </div>
+                <div class="card-back text-center">
+                    <h2 class="text-base font-semibold">Reality</h2>
+                    <p id="reality-text" class="reality-text text-sm mt-2"></p>
+                    <button id="next-button" onclick="nextCard()" class="mt-3 bg-yellow-400 text-blue-900 text-sm px-4 py-2 rounded hover:bg-yellow-500">Next</button>
+                </div>
+            </div>
+            <div id="final-image-container" class="final-image-container hidden">
+                <a href="https://www.starhealth.in/" target="_blank">
+                    <img id="final-image" class="final-image" src="https://d3jbu7vaxvlagf.cloudfront.net/small/v2/category_media/image_17124043826110.jpeg" alt="Final Health Image">
+                </a>
+            </div>
+        </div>
+        <a href="https://www.starhealth.in/" target="_blank" class="inline-block bg-blue-600 text-white text-sm px-5 py-2 rounded-lg font-semibold hover:bg-blue-700">Discover Star Health Plans</a>
+    </div>
+
+    <script>
+        const myths = [
+            {
+                myth: "Health insurance is only for old people.",
+                reality: "Illnesses can strike at any age. Star Health covers all ages with tailored plans. <br><strong>Fact:</strong> 70% of hospitalizations in India are under 40."
+            },
+            {
+                myth: "My company insurance is enough.",
+                reality: "Corporate plans have limits. Star Health offers comprehensive coverage for critical illnesses. <br><strong>Story:</strong> Anil, 32, faced high costs; Star Health helped."
+            },
+            {
+                myth: "Health insurance is too expensive.",
+                reality: "Star Health plans start at just a few rupees a day. <br><strong>Fact:</strong> Medical inflation in India rises at 14% annually."
+            }
+        ];
+
+        let currentCard = 0;
+        let isFinalImage = false;
+
+        function updateCard() {
+            if (isFinalImage) {
+                document.getElementById('card-container').innerHTML = `
+                    <div id="final-image-container" class="final-image-container">
+                        <a href="https://www.starhealth.in/" target="_blank">
+                            <img id="final-image" class="final-image" src="https://d3jbu7vaxvlagf.cloudfront.net/small/v2/category_media/image_17124043826110.jpeg" alt="Final Health Image">
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            const mythText = document.getElementById('myth-text');
+            const realityText = document.getElementById('reality-text');
+            mythText.innerHTML = myths[currentCard].myth;
+            realityText.innerHTML = myths[currentCard].reality;
+            document.getElementById('card').classList.remove('flipped');
+        }
+
+        function flipCard() {
+            if (isFinalImage) return;
+            document.getElementById('card').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (isFinalImage) return;
+            if (currentCard === myths.length - 1) {
+                isFinalImage = true;
+                updateCard();
+            } else {
+                currentCard = (currentCard + 1) % myths.length;
+                updateCard();
+            }
+        }
+
+        // Initialize first card
+        updateCard();
+
+        // Swipe functionality for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.getElementById('card-container').addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.getElementById('card-container').addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX < touchStartX - 50 && !isFinalImage) {
+                flipCard();
+            } else if (touchEndX > touchStartX + 50 && document.getElementById('card').classList.contains('flipped') && !isFinalImage) {
+                nextCard();
+            }
+        });
+    </script>
+</body>
+</html>
